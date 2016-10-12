@@ -1,26 +1,24 @@
 #!/usr/bin/env python
 import pika
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host='localhost'))
+credentials = pika.PlainCredentials('root', 'washomatic')
+parameters = pika.ConnectionParameters('52.210.163.71',
+                                       5672,
+                                       '/',
+                                       credentials)
+connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
-channel.exchange_declare(exchange='logs',
-                         type='fanout')
-
-result = channel.queue_declare(exclusive=True)
-queue_name = result.method.queue
-
-channel.queue_bind(exchange='logs',
-                   queue=queue_name)
-
-print(' [*] Waiting for logs. To exit press CTRL+C')
-
 def callback(ch, method, properties, body):
-    print(" [x] %r" % body)
+	print(" [x] Received %r" % body)
+	out_file = open("log.txt","a")
+	out_file.write(body)
+	out_file.close()
+
 
 channel.basic_consume(callback,
-                      queue=queue_name,
+                      queue='coda',
                       no_ack=True)
 
+print(' [*] Waiting for messages. To exit press CTRL+C')
 channel.start_consuming()
