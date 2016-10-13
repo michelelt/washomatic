@@ -1,4 +1,4 @@
-FROM python
+FROM ubuntu
 
 #RUN apt-get update
 #RUN apt-get install git
@@ -7,6 +7,3 @@ FROM python
 
 #RUN git clone https://github.com/michelelt/processor
 #RUN python processor/consumer.py
-
-
-
