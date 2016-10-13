@@ -6,8 +6,8 @@ RUN apt-get install git
 
 RUN pip install pika
 
-RUN git clone https://github.com/michelelt/washomatic/
-CMD python consumer.py
+RUN git clone https://github.com/michelelt/processor
+CMD python processor/consumer.py
 
 
 
